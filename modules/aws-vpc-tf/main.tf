@@ -38,12 +38,12 @@ resource "aws_subnet" "private_subnets" {
 
 resource "aws_eip" "nat_gateways" {
   count = length(aws_subnet.private_subnets)
-  vpc   = true
+  domain = "vpc"
 }
 
 resource "aws_nat_gateway" "nat_gtw"{
-    count = ength(aws_subnet.private_subnets)
-    subnet_id     = element(aws_subnet.public_subnets, count.index).id
+    count = length(aws_subnet.private_subnets)
+    subnet_id     = element(aws_subnet.private_subnets, count.index).id
     allocation_id = element(aws_eip.nat_gateways , count.index).id
 
 }
@@ -68,12 +68,12 @@ resource "aws_route_table_association" "public_subnet_asso" {
 
 
 resource "aws_route_table" "private_subnets" {
-  count  = length(aws_nat_gateway.nat_gw)
+  count  = length(aws_nat_gateway.nat_gtw)
   vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = element(aws_nat_gateway.nat_gw, count.index).id
+    gateway_id = element(aws_nat_gateway.nat_gtw, count.index).id
   }
 
   tags = {
@@ -86,3 +86,4 @@ resource "aws_route_table_association" "private_subnet_asso" {
   subnet_id      = element(aws_subnet.private_subnets[*].id, count.index)
   route_table_id = element(aws_route_table.private_subnets[*].id, count.index)
 }
+

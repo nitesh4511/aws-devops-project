@@ -1,5 +1,5 @@
 module "my_network" {
-    source = "./modules/aws_vpc-tf"
+    source = "./modules/aws-vpc-tf"
     vpc_name = "sample-demoVPC"
     vpc_cidr_block = "10.0.0.0/16"
     availability_zones = ["eu-west-2a", "eu-west-2b"]
@@ -14,10 +14,15 @@ resource "aws_security_group"  "demo-sg"{
     ingress {
        from_port = 22
        to_port = 22
-       from_port   = 80
-       to_port     = 80
        protocol = "tcp"
        cidr_blocks = ["0.0.0.0/0"]
     }
+
+     ingress {
+       from_port = 80
+       to_port = 80
+       protocol = "tcp"
+       cidr_blocks = ["0.0.0.0/0"]
+    }  
 
 }
