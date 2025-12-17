@@ -13,5 +13,6 @@ backend "s3" {
     region         = "eu-west-2"                   
     encrypt        = true
     dynamodb_table = "dynamo-db-back-end-setup01"
+    use_lockfile = true
   }
 }  
